@@ -1,5 +1,7 @@
 # Workflow Energy Ontology
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24010863.svg)](https://doi.org/10.5281/zenodo.24010863)
+
 An ontology for scientific workflow runs and their energy and carbon accounting.
 Each energy, carbon, CPU time, memory and duration value is stored together with how it was obtained.
 
@@ -48,7 +50,8 @@ https://github.com/YagmurKati/fonda-vivo-run-publisher.
 
 ## Version and license
 
-Version 0.9 (2026-11-06). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Version 0.9 (2026-11-06), DOI [10.5281/zenodo.24010864](https://doi.org/10.5281/zenodo.24010864).
+All versions: [10.5281/zenodo.24010863](https://doi.org/10.5281/zenodo.24010863). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ## Funding
 

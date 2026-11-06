@@ -10,6 +10,7 @@ authors:
 version: "0.9"
 date-released: "2026-11-06"
 license: CC-BY-4.0
+doi: "10.5281/zenodo.24010863"
 repository-code: "https://github.com/YagmurKati/workflow-energy-ontology"
 keywords:
   - ontology
