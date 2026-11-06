@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this ontology, please cite it using the metadata below."
+type: dataset
+title: "Workflow Energy Ontology"
+abstract: "An ontology for scientific workflow runs and their energy and carbon accounting. Each energy, carbon, CPU time, memory and duration value is stored together with how it was obtained. Designed as an extension of the VIVO ontology and usable in any RDF store."
+authors:
+  - family-names: Kati
+    given-names: Yagmur
+    affiliation: "Humboldt-Universität zu Berlin"
+version: "0.9"
+date-released: "2026-11-06"
+license: CC-BY-4.0
+repository-code: "https://github.com/YagmurKati/workflow-energy-ontology"
+keywords:
+  - ontology
+  - VIVO
+  - scientific workflows
+  - energy accounting
+  - carbon emissions

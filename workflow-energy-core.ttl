@@ -1,0 +1,794 @@
+# Workflow Energy Ontology, core (2026-11-06).
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix bibo:  <http://purl.org/ontology/bibo/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rm:    <http://example.org/ontology/run-metadata#> .
+
+<http://example.org/ontology/run-metadata> a owl:Ontology ;
+    rdfs:label "Workflow Energy Ontology (core)"@en ;
+    dcterms:creator "Yagmur Kati" ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    owl:versionInfo "0.9 (2026-11-06)" ;
+    rdfs:comment "Workflows, workflow steps, workflow runs and step executions, with energy, carbon, CPU time, memory and duration, and how each value was obtained. Designed as an extension of the VIVO ontology and used in the FONDA VIVO portal. It can be used in any RDF store. 16 classes, 139 properties."@en .
+
+# ---- Classes
+
+rm:ApplicationDomain a owl:Class ;
+    rdfs:label "Application domain"@en-US .
+
+rm:Backend a owl:Class ;
+    rdfs:label "Backend"@en-US .
+
+rm:ComputeCluster a owl:Class ;
+    rdfs:label "Compute Cluster"@en-US .
+
+rm:InputDataset a owl:Class ;
+    rdfs:label "Input Dataset"@en-US .
+
+rm:Language a owl:Class ;
+    rdfs:label "Language"@en-US .
+
+rm:ResearchField a owl:Class ;
+    rdfs:label "Research field"@en-US .
+
+rm:RunMetadata a owl:Class ;
+    rdfs:label "Workflow Run"@en-US .
+
+rm:RunTrace a owl:Class ;
+    rdfs:label "Run trace"@en-US ;
+    rdfs:subClassOf rm:Trace .
+
+rm:Trace a owl:Class ;
+    rdfs:label "Trace"@en-US .
+
+rm:TraceCollection a owl:Class ;
+    rdfs:label "Trace collection"@en-US ;
+    rdfs:subClassOf rm:Trace .
+
+rm:VisibilityLevel a owl:Class ;
+    rdfs:label "visibility choice"@en-US .
+
+rm:Workflow a owl:Class ;
+    rdfs:label "Workflow"@en-US .
+
+rm:WorkflowEngine a owl:Class ;
+    rdfs:label "Workflow Engine"@en-US .
+
+rm:WorkflowProcessRun a owl:Class ;
+    rdfs:label "Step execution"@en-US .
+
+rm:WorkflowPurpose a owl:Class ;
+    rdfs:label "Workflow purpose"@en-US .
+
+rm:WorkflowStage a owl:Class ;
+    rdfs:label "Workflow Stage"@en-US .
+
+# ---- Object properties
+
+rm:applicationDomain a owl:ObjectProperty ;
+    rdfs:label "application domain"@en-US ;
+    rdfs:domain rm:Workflow ;
+    rdfs:range rm:ApplicationDomain ;
+    owl:inverseOf rm:applicationDomainOf .
+
+rm:applicationDomainOf a owl:ObjectProperty ;
+    rdfs:label "application domain of"@en-US ;
+    rdfs:domain rm:ApplicationDomain ;
+    rdfs:range rm:RunMetadata ;
+    owl:inverseOf rm:applicationDomain .
+
+rm:backend a owl:ObjectProperty ;
+    rdfs:label "backend"@en-US ;
+    rdfs:range rm:Backend ;
+    rdfs:comment "Used on rm:RunMetadata, rm:Workflow. The research software module (research-software.ttl) also uses it on workflow environments, workflow scheduling."@en .
+
+rm:computeCluster a owl:ObjectProperty ;
+    rdfs:label "compute cluster"@en-US ;
+    rdfs:range rm:ComputeCluster ;
+    rdfs:comment "Used on rm:RunMetadata, rm:Workflow. The research software module (research-software.ttl) also uses it on workflow environments, workflow scheduling."@en .
+
+rm:describesSoftwareExecution a owl:ObjectProperty ;
+    rdfs:label "describes software execution"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:Workflow ) ] .
+
+rm:executionOfStage a owl:ObjectProperty ;
+    rdfs:label "workflow stage"@en-US ;
+    rdfs:domain rm:WorkflowProcessRun ;
+    rdfs:range rm:WorkflowStage ;
+    owl:inverseOf rm:hasStageExecution .
+
+rm:hasRun a owl:ObjectProperty ;
+    rdfs:label "workflow runs"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:Backend rm:ComputeCluster rm:Workflow rm:WorkflowEngine ) ] ;
+    rdfs:range rm:RunMetadata .
+
+rm:hasStageExecution a owl:ObjectProperty ;
+    rdfs:label "stage executions"@en-US ;
+    rdfs:domain rm:WorkflowStage ;
+    rdfs:range rm:WorkflowProcessRun ;
+    owl:inverseOf rm:executionOfStage .
+
+rm:hasTrace a owl:ObjectProperty ;
+    rdfs:label "traces"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:Workflow ) ] ;
+    rdfs:range rm:Trace ;
+    owl:inverseOf rm:traceOf .
+
+rm:hasUsedInputData a owl:ObjectProperty ;
+    rdfs:label "input datasets used"@en-US ;
+    rdfs:domain rm:Workflow ;
+    rdfs:range rm:InputDataset ;
+    owl:inverseOf rm:inputDataOfWorkflow .
+
+rm:hasWorkflow a owl:ObjectProperty ;
+    rdfs:label "workflows"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:Backend rm:ComputeCluster rm:Language rm:WorkflowEngine ) ] ;
+    rdfs:range rm:Workflow .
+
+rm:hasWorkflowProcess a owl:ObjectProperty ;
+    rdfs:label "workflow stages of the run"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range rm:WorkflowProcessRun ;
+    owl:inverseOf rm:isWorkflowProcessOf .
+
+rm:hasWorkflowRun a owl:ObjectProperty ;
+    rdfs:label "runs of this workflow"@en-US ;
+    rdfs:domain rm:Workflow ;
+    rdfs:range rm:RunMetadata ;
+    owl:inverseOf rm:workflow .
+
+rm:hasWorkflowStage a owl:ObjectProperty ;
+    rdfs:label "has workflow stages"@en-US ;
+    rdfs:domain rm:Workflow ;
+    rdfs:range rm:WorkflowStage ;
+    owl:inverseOf rm:stageOfWorkflow .
+
+rm:inputData a owl:ObjectProperty ;
+    rdfs:label "input data"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range rm:InputDataset ;
+    owl:inverseOf rm:usedByWorkflowRun .
+
+rm:inputDataOfWorkflow a owl:ObjectProperty ;
+    rdfs:label "used by workflow"@en-US ;
+    rdfs:domain rm:InputDataset ;
+    rdfs:range rm:Workflow ;
+    owl:inverseOf rm:hasUsedInputData .
+
+rm:isWorkflowProcessOf a owl:ObjectProperty ;
+    rdfs:label "step execution of run"@en-US ;
+    rdfs:domain rm:WorkflowProcessRun ;
+    rdfs:range rm:RunMetadata ;
+    owl:inverseOf rm:hasWorkflowProcess .
+
+rm:language a owl:ObjectProperty ;
+    rdfs:label "language"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:Workflow ) ] ;
+    rdfs:range rm:Language .
+
+rm:providedTrace a owl:ObjectProperty ;
+    rdfs:label "provided traces"@en-US ;
+    rdfs:domain foaf:Person ;
+    rdfs:range rm:Trace ;
+    owl:inverseOf rm:traceProvidedBy .
+
+rm:relatedPublication a owl:ObjectProperty ;
+    rdfs:label "related publication"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range bibo:Document .
+
+rm:researchField a owl:ObjectProperty ;
+    rdfs:label "research field"@en-US ;
+    rdfs:domain rm:Workflow ;
+    rdfs:range rm:ResearchField ;
+    owl:inverseOf rm:researchFieldOf .
+
+rm:researchFieldOf a owl:ObjectProperty ;
+    rdfs:label "research field of"@en-US ;
+    rdfs:domain rm:ResearchField ;
+    rdfs:range rm:Workflow ;
+    owl:inverseOf rm:researchField .
+
+rm:responsibleResearcher a owl:ObjectProperty ;
+    rdfs:label "responsible researcher"@en-US ;
+    rdfs:range foaf:Person ;
+    owl:inverseOf rm:workflows ;
+    rdfs:comment "Used on rm:Workflow. The research software module (research-software.ttl) also uses it on benchmarks and datasets, workflow environments, workflow scheduling, workflow tools and plugins."@en .
+
+rm:runOperator a owl:ObjectProperty ;
+    rdfs:label "run by"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range foaf:Person ;
+    owl:inverseOf rm:runOperatorOf .
+
+rm:runOperatorOf a owl:ObjectProperty ;
+    rdfs:label "workflow runs"@en-US ;
+    rdfs:domain foaf:Person ;
+    rdfs:range rm:RunMetadata ;
+    owl:inverseOf rm:runOperator .
+
+rm:stageIncludedInRun a owl:ObjectProperty ;
+    rdfs:label "workflow runs"@en-US ;
+    rdfs:domain rm:WorkflowStage ;
+    rdfs:range rm:RunMetadata ;
+    owl:inverseOf rm:usesWorkflowStage .
+
+rm:stageOfWorkflow a owl:ObjectProperty ;
+    rdfs:label "workflow"@en-US ;
+    rdfs:domain rm:WorkflowStage ;
+    rdfs:range rm:Workflow ;
+    owl:inverseOf rm:hasWorkflowStage .
+
+rm:subproject a owl:ObjectProperty ;
+    rdfs:label "subproject"@en-US ;
+    rdfs:domain rm:Workflow .
+
+rm:traceOf a owl:ObjectProperty ;
+    rdfs:label "trace of"@en-US ;
+    rdfs:domain rm:Trace ;
+    owl:inverseOf rm:hasTrace .
+
+rm:traceProvidedBy a owl:ObjectProperty ;
+    rdfs:label "provided by"@en-US ;
+    rdfs:domain rm:Trace ;
+    rdfs:range foaf:Person ;
+    owl:inverseOf rm:providedTrace .
+
+rm:usedByWorkflowRun a owl:ObjectProperty ;
+    rdfs:label "used by workflow runs"@en-US ;
+    rdfs:domain rm:InputDataset ;
+    rdfs:range rm:RunMetadata ;
+    owl:inverseOf rm:inputData .
+
+rm:usedInPublication a owl:ObjectProperty ;
+    rdfs:label "publications using this workflow item"@en-US ;
+    rdfs:range bibo:Document ;
+    owl:inverseOf rm:usesWorkflow ;
+    rdfs:comment "Used on rm:Workflow. The research software module (research-software.ttl) also uses it on workflow scheduling, workflow tools and plugins."@en .
+
+rm:usesWorkflow a owl:ObjectProperty ;
+    rdfs:label "workflows used"@en-US ;
+    rdfs:domain bibo:Document ;
+    rdfs:range rm:Workflow ;
+    owl:inverseOf rm:usedInPublication .
+
+rm:usesWorkflowStage a owl:ObjectProperty ;
+    rdfs:label "stages of the workflow"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range rm:WorkflowStage ;
+    owl:inverseOf rm:stageIncludedInRun .
+
+rm:visibility a owl:ObjectProperty ;
+    rdfs:label "who can see this run"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range rm:VisibilityLevel .
+
+rm:workflow a owl:ObjectProperty ;
+    rdfs:label "workflow name"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range rm:Workflow ;
+    owl:inverseOf rm:hasWorkflowRun .
+
+rm:workflowEngine a owl:ObjectProperty ;
+    rdfs:label "workflow engine"@en-US ;
+    rdfs:range rm:WorkflowEngine ;
+    rdfs:comment "Used on rm:RunMetadata, rm:Workflow. The research software module (research-software.ttl) also uses it on workflow environments, workflow scheduling, workflow tools and plugins."@en .
+
+rm:workflowPurpose a owl:ObjectProperty ;
+    rdfs:label "purpose"@en-US ;
+    rdfs:domain rm:Workflow ;
+    rdfs:range rm:WorkflowPurpose ;
+    owl:inverseOf rm:workflowPurposeOf .
+
+rm:workflowPurposeOf a owl:ObjectProperty ;
+    rdfs:label "purpose of"@en-US ;
+    rdfs:domain rm:WorkflowPurpose ;
+    rdfs:range rm:Workflow ;
+    owl:inverseOf rm:workflowPurpose .
+
+rm:workflows a owl:ObjectProperty ;
+    rdfs:label "workflows"@en-US ;
+    rdfs:domain foaf:Person ;
+    rdfs:range rm:Workflow ;
+    owl:inverseOf rm:responsibleResearcher .
+
+# ---- Data properties
+
+rm:abortedTaskCount a owl:DatatypeProperty ;
+    rdfs:label "aborted tasks"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:integer .
+
+rm:accessInstructionsURL a owl:DatatypeProperty ;
+    rdfs:label "access and preparation instructions"@en-US ;
+    rdfs:domain rm:InputDataset ;
+    rdfs:range xsd:anyURI .
+
+rm:accessStatement a owl:DatatypeProperty ;
+    rdfs:label "access statement"@en-US ;
+    rdfs:domain rm:InputDataset ;
+    rdfs:range xsd:string .
+
+rm:allocatableCpu a owl:DatatypeProperty ;
+    rdfs:label "node allocatable CPU"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:allocatableMemoryGB a owl:DatatypeProperty ;
+    rdfs:label "node allocatable memory (GB)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:architecture a owl:DatatypeProperty ;
+    rdfs:label "node architecture"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:authors a owl:DatatypeProperty ;
+    rdfs:label "authors"@en-US ;
+    rdfs:domain rm:Workflow ;
+    rdfs:range xsd:string .
+
+rm:cachedTaskCount a owl:DatatypeProperty ;
+    rdfs:label "cached tasks"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:integer .
+
+rm:carbonCalculationMethod a owl:DatatypeProperty ;
+    rdfs:label "carbon calculation method"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:string .
+
+rm:carbonEmissionKgCO2e a owl:DatatypeProperty ;
+    rdfs:label "carbon emission (kg CO2e)"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:double .
+
+rm:carbonIntensityAssumptionKgCO2ePerKWh a owl:DatatypeProperty ;
+    rdfs:label "carbon intensity (kg CO2e/kWh)"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:double .
+
+rm:carbonIntensityDataPointCount a owl:DatatypeProperty ;
+    rdfs:label "carbon intensity data points"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:integer .
+
+rm:carbonIntensityEmissionsBasis a owl:DatatypeProperty ;
+    rdfs:label "carbon intensity emissions basis"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:string .
+
+rm:carbonIntensityIncludesEstimatedData a owl:DatatypeProperty ;
+    rdfs:label "carbon intensity includes estimated data"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:boolean .
+
+rm:carbonIntensitySource a owl:DatatypeProperty ;
+    rdfs:label "carbon intensity source"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:string .
+
+rm:carbonIntensitySourceLink a owl:DatatypeProperty ;
+    rdfs:label "carbon intensity source link"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:anyURI .
+
+rm:carbonIntensityTemporalGranularity a owl:DatatypeProperty ;
+    rdfs:label "carbon intensity time granularity"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:string .
+
+rm:carbonIntensityWindowEnd a owl:DatatypeProperty ;
+    rdfs:label "carbon intensity window end"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:dateTime .
+
+rm:carbonIntensityWindowStart a owl:DatatypeProperty ;
+    rdfs:label "carbon intensity window start"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:dateTime .
+
+rm:carbonIntensityZone a owl:DatatypeProperty ;
+    rdfs:label "carbon intensity zone"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:string .
+
+rm:checksumManifestURL a owl:DatatypeProperty ;
+    rdfs:label "checksum manifest"@en-US ;
+    rdfs:domain rm:InputDataset ;
+    rdfs:range xsd:anyURI .
+
+rm:codeCommitLink a owl:DatatypeProperty ;
+    rdfs:label "code commit"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:anyURI .
+
+rm:codeVersion a owl:DatatypeProperty ;
+    rdfs:label "code version"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:containerImage a owl:DatatypeProperty ;
+    rdfs:label "container image"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:cpuEfficiencyPercent a owl:DatatypeProperty ;
+    rdfs:label "CPU efficiency (%)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:cpuFrequencyAvgMHz a owl:DatatypeProperty ;
+    rdfs:label "CPU frequency average (MHz)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:cpuPlacement a owl:DatatypeProperty ;
+    rdfs:label "CPUs used"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:cpuTemperatureAvgC a owl:DatatypeProperty ;
+    rdfs:label "CPU temperature average (°C)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:cpuTemperatureMaxC a owl:DatatypeProperty ;
+    rdfs:label "CPU temperature maximum (°C)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:cpuTimeCalculationMethod a owl:DatatypeProperty ;
+    rdfs:label "CPU time calculation method"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:string .
+
+rm:cpuTimeSeconds a owl:DatatypeProperty ;
+    rdfs:label "CPU time (s)"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:double .
+
+rm:dataReadGB a owl:DatatypeProperty ;
+    rdfs:label "data read (GB)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:dataWrittenGB a owl:DatatypeProperty ;
+    rdfs:label "data written (GB)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:durationCalculationMethod a owl:DatatypeProperty ;
+    rdfs:label "duration time calculation method"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:string .
+
+rm:durationSeconds a owl:DatatypeProperty ;
+    rdfs:label "duration (s)"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:integer .
+
+rm:endTime a owl:DatatypeProperty ;
+    rdfs:label "end time"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:dateTime .
+
+rm:energyAboveIdleKWh a owl:DatatypeProperty ;
+    rdfs:label "energy above idle (kWh)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:energyCalculationMethod a owl:DatatypeProperty ;
+    rdfs:label "energy calculation method"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:string .
+
+rm:energyCalculationUsesFallbackEstimate a owl:DatatypeProperty ;
+    rdfs:label "energy uses fallback estimate"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:boolean .
+
+rm:energyKWh a owl:DatatypeProperty ;
+    rdfs:label "energy consumed (kWh)"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:double .
+
+rm:energyMeasurementCoverage a owl:DatatypeProperty ;
+    rdfs:label "energy measurement coverage"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:energyMetricSource a owl:DatatypeProperty ;
+    rdfs:label "energy metric source"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:string .
+
+rm:executionHost a owl:DatatypeProperty ;
+    rdfs:label "execution host"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:exhaustTemperatureAvgC a owl:DatatypeProperty ;
+    rdfs:label "exhaust temperature average (°C)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:failedTaskCount a owl:DatatypeProperty ;
+    rdfs:label "failed tasks"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:integer .
+
+rm:failureReason a owl:DatatypeProperty ;
+    rdfs:label "failure reason"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:fanSpeedAvgRPM a owl:DatatypeProperty ;
+    rdfs:label "fan speed average (rpm)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:formatDocumentationURL a owl:DatatypeProperty ;
+    rdfs:label "input format documentation"@en-US ;
+    rdfs:domain rm:InputDataset ;
+    rdfs:range xsd:anyURI .
+
+rm:gitCommit a owl:DatatypeProperty ;
+    rdfs:label "git commit"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:gpuCapableNodeUsed a owl:DatatypeProperty ;
+    rdfs:label "GPU-capable node used"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:boolean .
+
+rm:gpuMetricsAvailable a owl:DatatypeProperty ;
+    rdfs:label "GPU metrics available"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:boolean .
+
+rm:gpuRequested a owl:DatatypeProperty ;
+    rdfs:label "GPU requested"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:boolean .
+
+rm:gpuUsageStatus a owl:DatatypeProperty ;
+    rdfs:label "GPU usage status"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:gridCarbonIntensityHours a owl:DatatypeProperty ;
+    rdfs:label "hourly grid carbon intensity"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:gridCarbonIntensityHoursMethod a owl:DatatypeProperty ;
+    rdfs:label "hourly grid carbon intensity method"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:idlePowerMethod a owl:DatatypeProperty ;
+    rdfs:label "idle power method"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:inletTemperatureAvgC a owl:DatatypeProperty ;
+    rdfs:label "inlet temperature average (°C)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:jobName a owl:DatatypeProperty ;
+    rdfs:label "job name"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:string .
+
+rm:kernelVersion a owl:DatatypeProperty ;
+    rdfs:label "kernel version"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:kubeletVersion a owl:DatatypeProperty ;
+    rdfs:label "kubelet version"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:memoryAvgGB a owl:DatatypeProperty ;
+    rdfs:label "average memory (GB)"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:double .
+
+rm:memoryCalculationMethod a owl:DatatypeProperty ;
+    rdfs:label "memory calculation method"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:string .
+
+rm:memoryPeakGB a owl:DatatypeProperty ;
+    rdfs:label "peak memory (GB)"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:double .
+
+rm:nextflowSessionId a owl:DatatypeProperty ;
+    rdfs:label "Nextflow session ID"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:nextflowVersion a owl:DatatypeProperty ;
+    rdfs:label "Nextflow version"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:nodeConditionsMethod a owl:DatatypeProperty ;
+    rdfs:label "node conditions method"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:nodeCpuUtilizationAvgPercent a owl:DatatypeProperty ;
+    rdfs:label "node CPU utilisation average (%)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:nodeIdlePowerSampledW a owl:DatatypeProperty ;
+    rdfs:label "node awake idle power (W)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:nodeIdlePowerSleepW a owl:DatatypeProperty ;
+    rdfs:label "node sleeping idle power (W)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:nodeIdlePowerW a owl:DatatypeProperty ;
+    rdfs:label "node idle power (W)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:nodePowerAvgW a owl:DatatypeProperty ;
+    rdfs:label "node power average (W)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:nodePowerMaxW a owl:DatatypeProperty ;
+    rdfs:label "node power maximum (W)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:double .
+
+rm:nodePowerReadings a owl:DatatypeProperty ;
+    rdfs:label "node power readings"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:nodePowerReadingsMethod a owl:DatatypeProperty ;
+    rdfs:label "node power readings method"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:nodeUse a owl:DatatypeProperty ;
+    rdfs:label "node use"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:osImage a owl:DatatypeProperty ;
+    rdfs:label "os image"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:parallelismNote a owl:DatatypeProperty ;
+    rdfs:label "parallelism note"@en-US ;
+    rdfs:domain rm:WorkflowProcessRun ;
+    rdfs:range xsd:string .
+
+rm:podCount a owl:DatatypeProperty ;
+    rdfs:label "pod count"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:integer .
+
+rm:purpose a owl:DatatypeProperty ;
+    rdfs:label "purpose"@en-US ;
+    rdfs:range xsd:string ;
+    rdfs:comment "Used on rm:Workflow. The research software module (research-software.ttl) also uses it on benchmarks and datasets, data systems, workflow environments, workflow scheduling, workflow tools and plugins."@en .
+
+rm:resourceAccountingEndTime a owl:DatatypeProperty ;
+    rdfs:label "resource accounting end"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:dateTime .
+
+rm:resourceAccountingScope a owl:DatatypeProperty ;
+    rdfs:label "resource accounting scope"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:resourceAccountingStartTime a owl:DatatypeProperty ;
+    rdfs:label "resource accounting start"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:dateTime .
+
+rm:runStatus a owl:DatatypeProperty ;
+    rdfs:label "run status"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:string .
+
+rm:startTime a owl:DatatypeProperty ;
+    rdfs:label "start time"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:dateTime .
+
+rm:storageLocation a owl:DatatypeProperty ;
+    rdfs:label "storage location"@en-US ;
+    rdfs:domain rm:InputDataset ;
+    rdfs:range xsd:string .
+
+rm:succeededTaskCount a owl:DatatypeProperty ;
+    rdfs:label "succeeded tasks"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:integer .
+
+rm:taskCount a owl:DatatypeProperty ;
+    rdfs:label "task count"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range xsd:integer .
+
+rm:taskName a owl:DatatypeProperty ;
+    rdfs:label "task name"@en-US ;
+    rdfs:domain rm:WorkflowProcessRun ;
+    rdfs:range xsd:string .
+
+rm:temperatureCalculationMethod a owl:DatatypeProperty ;
+    rdfs:label "temperature method"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string .
+
+rm:traceArchive a owl:DatatypeProperty ;
+    rdfs:label "trace archive"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:Trace rm:Workflow ) ] ;
+    rdfs:range xsd:anyURI .
+
+rm:traceDataFormat a owl:DatatypeProperty ;
+    rdfs:label "trace data format"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:Trace rm:Workflow ) ] ;
+    rdfs:range xsd:string .
+
+rm:traceDescription a owl:DatatypeProperty ;
+    rdfs:label "description"@en-US ;
+    rdfs:domain rm:Trace ;
+    rdfs:range xsd:string .
+
+rm:traceInfrastructure a owl:DatatypeProperty ;
+    rdfs:label "infrastructure"@en-US ;
+    rdfs:domain rm:Trace ;
+    rdfs:range xsd:string .
+
+rm:traceScriptsLink a owl:DatatypeProperty ;
+    rdfs:label "scripts"@en-US ;
+    rdfs:domain rm:Trace ;
+    rdfs:range xsd:anyURI .
+
+rm:traceTypes a owl:DatatypeProperty ;
+    rdfs:label "trace types"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:Trace rm:Workflow ) ] ;
+    rdfs:range xsd:string .
+
+rm:upstreamSourceURL a owl:DatatypeProperty ;
+    rdfs:label "upstream data source"@en-US ;
+    rdfs:domain rm:InputDataset ;
+    rdfs:range xsd:anyURI .
+
+rm:workflowCodeLink a owl:DatatypeProperty ;
+    rdfs:label "workflow code link"@en-US ;
+    rdfs:range xsd:anyURI ;
+    rdfs:comment "Used on rm:RunMetadata, rm:Workflow, rm:WorkflowEngine. The research software module (research-software.ttl) also uses it on benchmarks and datasets, data systems, workflow environments, workflow scheduling, workflow tools and plugins."@en .
+
+rm:workflowName a owl:DatatypeProperty ;
+    rdfs:label "workflow name"@en-US ;
+    rdfs:domain rm:Workflow ;
+    rdfs:range xsd:string .
+
+rm:workflowUiLink a owl:DatatypeProperty ;
+    rdfs:label "workflow UI link"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:Workflow ) ] ;
+    rdfs:range xsd:anyURI .
