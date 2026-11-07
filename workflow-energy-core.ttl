@@ -1,4 +1,4 @@
-# Workflow Energy Ontology, core (2026-11-06).
+# Workflow Energy Ontology, core, version 0.9.1 (2026-11-07).
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -12,10 +12,15 @@
     rdfs:label "Workflow Energy Ontology (core)"@en ;
     dcterms:creator "Yagmur Kati" ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
-    owl:versionInfo "0.9 (2026-11-06)" ;
+    owl:versionInfo "0.9.1 (2026-11-07)" ;
     rdfs:comment "Workflows, workflow steps, workflow runs and step executions, with energy, carbon, CPU time, memory and duration, and how each value was obtained. Designed as an extension of the VIVO ontology and used in the FONDA VIVO portal. It can be used in any RDF store. 16 classes, 139 properties."@en .
 
 # ---- Classes
+
+# Classes of other vocabularies used as domain or range.
+foaf:Person a owl:Class .
+
+bibo:Document a owl:Class .
 
 rm:ApplicationDomain a owl:Class ;
     rdfs:label "Application domain"@en-US .
@@ -78,7 +83,7 @@ rm:applicationDomain a owl:ObjectProperty ;
 rm:applicationDomainOf a owl:ObjectProperty ;
     rdfs:label "application domain of"@en-US ;
     rdfs:domain rm:ApplicationDomain ;
-    rdfs:range rm:RunMetadata ;
+    rdfs:range rm:Workflow ;
     owl:inverseOf rm:applicationDomain .
 
 rm:backend a owl:ObjectProperty ;

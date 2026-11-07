@@ -7,8 +7,8 @@ authors:
   - family-names: Kati
     given-names: Yagmur
     affiliation: "Humboldt-Universität zu Berlin"
-version: "0.9"
-date-released: "2026-11-06"
+version: "0.9.1"
+date-released: "2026-11-07"
 license: CC-BY-4.0
 doi: "10.5281/zenodo.24010863"
 repository-code: "https://github.com/YagmurKati/workflow-energy-ontology"

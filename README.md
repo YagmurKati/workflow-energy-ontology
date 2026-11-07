@@ -50,8 +50,14 @@ https://github.com/YagmurKati/fonda-vivo-run-publisher.
 
 ## Version and license
 
-Version 0.9 (2026-11-06), DOI [10.5281/zenodo.24010864](https://doi.org/10.5281/zenodo.24010864).
-All versions: [10.5281/zenodo.24010863](https://doi.org/10.5281/zenodo.24010863). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Version 0.9.1 (2026-11-07). All versions: [10.5281/zenodo.24010863](https://doi.org/10.5281/zenodo.24010863). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+## Changes
+
+- 0.9.1 (2026-11-07): the range of `rm:applicationDomainOf` is now `rm:Workflow`, the inverse of `rm:applicationDomain`
+  (it was `rm:RunMetadata`). `foaf:Person` and `bibo:Document` are declared as classes. Both found with the
+  OOPS! pitfall scanner.
+- 0.9 (2026-11-06): first release, DOI [10.5281/zenodo.24010864](https://doi.org/10.5281/zenodo.24010864).
 
 ## Funding
 
