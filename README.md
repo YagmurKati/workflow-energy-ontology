@@ -12,7 +12,7 @@ It was designed as an extension of the [VIVO](https://vivoweb.org/) ontology and
 
 | File | Content |
 |---|---|
-| [`workflow-energy-core.ttl`](workflow-energy-core.ttl) | the core: 16 classes, 139 properties (40 object, 99 data) |
+| [`workflow-energy-core.ttl`](workflow-energy-core.ttl) | the core: 16 classes, 140 properties (40 object, 100 data) |
 | [`research-software.ttl`](research-software.ttl) | optional: 5 classes for research software around workflows (benchmarks and datasets, data systems, workflow environments, workflow scheduling, workflow tools and plugins). Imports the core. |
 
 Namespace: `http://example.org/ontology/run-metadata#` (prefix `rm:`), the same in both files.
@@ -50,10 +50,12 @@ https://github.com/YagmurKati/fonda-vivo-run-publisher.
 
 ## Version and license
 
-Version 0.9.1 (2026-11-07). All versions: [10.5281/zenodo.24010863](https://doi.org/10.5281/zenodo.24010863). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Version 0.9.2 (2026-11-07). All versions: [10.5281/zenodo.24010863](https://doi.org/10.5281/zenodo.24010863). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ## Changes
 
+- 0.9.2 (2026-11-07): new property `rm:slurmAccountingEnergyKWh`, a second measurement of a run's energy
+  next to the main value `rm:energyKWh`.
 - 0.9.1 (2026-11-07): the range of `rm:applicationDomainOf` is now `rm:Workflow`, the inverse of `rm:applicationDomain`
   (it was `rm:RunMetadata`). `foaf:Person` and `bibo:Document` are declared as classes. Both found with the
   OOPS! pitfall scanner.
