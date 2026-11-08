@@ -50,10 +50,12 @@ https://github.com/YagmurKati/fonda-vivo-run-publisher.
 
 ## Version and license
 
-Version 0.9.2 (2026-11-07). All versions: [10.5281/zenodo.24010863](https://doi.org/10.5281/zenodo.24010863). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Version 0.9.3 (2026-11-08). All versions: [10.5281/zenodo.24010863](https://doi.org/10.5281/zenodo.24010863). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ## Changes
 
+- 0.9.3 (2026-11-08): the range of `rm:purpose` and `rm:accessStatement` is now `rdfs:Literal` (it was `xsd:string`),
+  because their values in VIVO carry a language tag, and a reasoner treats such a value as outside `xsd:string`.
 - 0.9.2 (2026-11-07): new property `rm:slurmAccountingEnergyKWh`, a second measurement of a run's energy
   next to the main value `rm:energyKWh`.
 - 0.9.1 (2026-11-07): the range of `rm:applicationDomainOf` is now `rm:Workflow`, the inverse of `rm:applicationDomain`
