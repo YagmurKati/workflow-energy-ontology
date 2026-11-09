@@ -12,10 +12,13 @@ It was designed as an extension of the [VIVO](https://vivoweb.org/) ontology and
 
 | File | Content |
 |---|---|
-| [`workflow-energy-core.ttl`](workflow-energy-core.ttl) | the core: 16 classes, 140 properties (40 object, 100 data) |
+| [`workflow-energy-core.ttl`](workflow-energy-core.ttl) | the core: 16 classes, 140 properties (40 object, 100 data), and the annotation property `rm:unit` |
 | [`research-software.ttl`](research-software.ttl) | optional: 5 classes for research software around workflows (benchmarks and datasets, data systems, workflow environments, workflow scheduling, workflow tools and plugins). Imports the core. |
 
 Namespace: `http://example.org/ontology/run-metadata#` (prefix `rm:`), the same in both files.
+
+Units: every data property with a unit names it with `rm:unit`, as a [QUDT](https://qudt.org/) unit,
+for example `rm:energyKWh rm:unit unit:KiloW-HR` (`unit:` = `http://qudt.org/vocab/unit/`). Gigabytes are 10^9 bytes.
 
 ## Core classes
 
@@ -50,10 +53,12 @@ https://github.com/YagmurKati/fonda-vivo-run-publisher.
 
 ## Version and license
 
-Version 0.9.3 (2026-11-08). All versions: [10.5281/zenodo.24010863](https://doi.org/10.5281/zenodo.24010863). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Version 0.9.4 (2026-11-08). All versions: [10.5281/zenodo.24010863](https://doi.org/10.5281/zenodo.24010863). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ## Changes
 
+- 0.9.4 (2026-11-08): new annotation property `rm:unit`. The 25 data properties with a unit in their name
+  now also give it as a QUDT unit. No class or property changed, so existing data stays valid.
 - 0.9.3 (2026-11-08): the range of `rm:purpose` and `rm:accessStatement` is now `rdfs:Literal` (it was `xsd:string`),
   because their values in VIVO carry a language tag, and a reasoner treats such a value as outside `xsd:string`.
 - 0.9.2 (2026-11-07): new property `rm:slurmAccountingEnergyKWh`, a second measurement of a run's energy

@@ -1,4 +1,4 @@
-# Workflow Energy Ontology, core, version 0.9.3 (2026-11-08).
+# Workflow Energy Ontology, core, version 0.9.4 (2026-11-08).
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -7,13 +7,20 @@
 @prefix bibo:  <http://purl.org/ontology/bibo/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix rm:    <http://example.org/ontology/run-metadata#> .
+@prefix unit:  <http://qudt.org/vocab/unit/> .
 
 <http://example.org/ontology/run-metadata> a owl:Ontology ;
     rdfs:label "Workflow Energy Ontology (core)"@en ;
     dcterms:creator "Yagmur Kati" ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
-    owl:versionInfo "0.9.3 (2026-11-08)" ;
-    rdfs:comment "Workflows, workflow steps, workflow runs and step executions, with energy, carbon, CPU time, memory and duration, and how each value was obtained. Designed as an extension of the VIVO ontology and used in the FONDA VIVO portal. It can be used in any RDF store. 16 classes, 140 properties."@en .
+    owl:versionInfo "0.9.4 (2026-11-08)" ;
+    rdfs:comment "Workflows, workflow steps, workflow runs and step executions, with energy, carbon, CPU time, memory and duration, and how each value was obtained. Designed as an extension of the VIVO ontology and used in the FONDA VIVO portal. It can be used in any RDF store. 16 classes, 140 properties. Units of data properties are given as QUDT units with rm:unit."@en .
+
+# ---- Annotation property
+
+rm:unit a owl:AnnotationProperty ;
+    rdfs:label "unit"@en-US ;
+    rdfs:comment "The unit of the values of a data property, as a QUDT unit (http://qudt.org/vocab/unit/)."@en .
 
 # ---- Classes
 
@@ -326,6 +333,7 @@ rm:allocatableCpu a owl:DatatypeProperty ;
 
 rm:allocatableMemoryGB a owl:DatatypeProperty ;
     rdfs:label "node allocatable memory (GB)"@en-US ;
+    rm:unit unit:GigaBYTE ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
@@ -351,11 +359,13 @@ rm:carbonCalculationMethod a owl:DatatypeProperty ;
 
 rm:carbonEmissionKgCO2e a owl:DatatypeProperty ;
     rdfs:label "carbon emission (kg CO2e)"@en-US ;
+    rm:unit unit:KiloGM ;
     rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
     rdfs:range xsd:double .
 
 rm:carbonIntensityAssumptionKgCO2ePerKWh a owl:DatatypeProperty ;
     rdfs:label "carbon intensity (kg CO2e/kWh)"@en-US ;
+    rm:unit unit:KiloGM-PER-KiloW-HR ;
     rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
     rdfs:range xsd:double .
 
@@ -426,11 +436,13 @@ rm:containerImage a owl:DatatypeProperty ;
 
 rm:cpuEfficiencyPercent a owl:DatatypeProperty ;
     rdfs:label "CPU efficiency (%)"@en-US ;
+    rm:unit unit:PERCENT ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
 rm:cpuFrequencyAvgMHz a owl:DatatypeProperty ;
     rdfs:label "CPU frequency average (MHz)"@en-US ;
+    rm:unit unit:MegaHZ ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
@@ -441,11 +453,13 @@ rm:cpuPlacement a owl:DatatypeProperty ;
 
 rm:cpuTemperatureAvgC a owl:DatatypeProperty ;
     rdfs:label "CPU temperature average (°C)"@en-US ;
+    rm:unit unit:DEG_C ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
 rm:cpuTemperatureMaxC a owl:DatatypeProperty ;
     rdfs:label "CPU temperature maximum (°C)"@en-US ;
+    rm:unit unit:DEG_C ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
@@ -456,16 +470,19 @@ rm:cpuTimeCalculationMethod a owl:DatatypeProperty ;
 
 rm:cpuTimeSeconds a owl:DatatypeProperty ;
     rdfs:label "CPU time (s)"@en-US ;
+    rm:unit unit:SEC ;
     rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
     rdfs:range xsd:double .
 
 rm:dataReadGB a owl:DatatypeProperty ;
     rdfs:label "data read (GB)"@en-US ;
+    rm:unit unit:GigaBYTE ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
 rm:dataWrittenGB a owl:DatatypeProperty ;
     rdfs:label "data written (GB)"@en-US ;
+    rm:unit unit:GigaBYTE ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
@@ -476,6 +493,7 @@ rm:durationCalculationMethod a owl:DatatypeProperty ;
 
 rm:durationSeconds a owl:DatatypeProperty ;
     rdfs:label "duration (s)"@en-US ;
+    rm:unit unit:SEC ;
     rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
     rdfs:range xsd:integer .
 
@@ -486,11 +504,13 @@ rm:endTime a owl:DatatypeProperty ;
 
 rm:energyAboveIdleKWh a owl:DatatypeProperty ;
     rdfs:label "energy above idle (kWh)"@en-US ;
+    rm:unit unit:KiloW-HR ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
 rm:slurmAccountingEnergyKWh a owl:DatatypeProperty ;
     rdfs:label "Slurm accounting energy (kWh)"@en-US ;
+    rm:unit unit:KiloW-HR ;
     rdfs:comment "A second measurement of the run's energy: the energy that Slurm accounting (acct_gather_energy) reports for the job. rm:energyKWh holds the main value, which comparisons use; the energy calculation method says why it was chosen."@en ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
@@ -507,6 +527,7 @@ rm:energyCalculationUsesFallbackEstimate a owl:DatatypeProperty ;
 
 rm:energyKWh a owl:DatatypeProperty ;
     rdfs:label "energy consumed (kWh)"@en-US ;
+    rm:unit unit:KiloW-HR ;
     rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
     rdfs:range xsd:double .
 
@@ -527,6 +548,7 @@ rm:executionHost a owl:DatatypeProperty ;
 
 rm:exhaustTemperatureAvgC a owl:DatatypeProperty ;
     rdfs:label "exhaust temperature average (°C)"@en-US ;
+    rm:unit unit:DEG_C ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
@@ -542,6 +564,7 @@ rm:failureReason a owl:DatatypeProperty ;
 
 rm:fanSpeedAvgRPM a owl:DatatypeProperty ;
     rdfs:label "fan speed average (rpm)"@en-US ;
+    rm:unit unit:REV-PER-MIN ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
@@ -592,6 +615,7 @@ rm:idlePowerMethod a owl:DatatypeProperty ;
 
 rm:inletTemperatureAvgC a owl:DatatypeProperty ;
     rdfs:label "inlet temperature average (°C)"@en-US ;
+    rm:unit unit:DEG_C ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
@@ -612,6 +636,7 @@ rm:kubeletVersion a owl:DatatypeProperty ;
 
 rm:memoryAvgGB a owl:DatatypeProperty ;
     rdfs:label "average memory (GB)"@en-US ;
+    rm:unit unit:GigaBYTE ;
     rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
     rdfs:range xsd:double .
 
@@ -622,6 +647,7 @@ rm:memoryCalculationMethod a owl:DatatypeProperty ;
 
 rm:memoryPeakGB a owl:DatatypeProperty ;
     rdfs:label "peak memory (GB)"@en-US ;
+    rm:unit unit:GigaBYTE ;
     rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
     rdfs:range xsd:double .
 
@@ -642,31 +668,37 @@ rm:nodeConditionsMethod a owl:DatatypeProperty ;
 
 rm:nodeCpuUtilizationAvgPercent a owl:DatatypeProperty ;
     rdfs:label "node CPU utilisation average (%)"@en-US ;
+    rm:unit unit:PERCENT ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
 rm:nodeIdlePowerSampledW a owl:DatatypeProperty ;
     rdfs:label "node awake idle power (W)"@en-US ;
+    rm:unit unit:W ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
 rm:nodeIdlePowerSleepW a owl:DatatypeProperty ;
     rdfs:label "node sleeping idle power (W)"@en-US ;
+    rm:unit unit:W ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
 rm:nodeIdlePowerW a owl:DatatypeProperty ;
     rdfs:label "node idle power (W)"@en-US ;
+    rm:unit unit:W ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
 rm:nodePowerAvgW a owl:DatatypeProperty ;
     rdfs:label "node power average (W)"@en-US ;
+    rm:unit unit:W ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
 rm:nodePowerMaxW a owl:DatatypeProperty ;
     rdfs:label "node power maximum (W)"@en-US ;
+    rm:unit unit:W ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:double .
 
