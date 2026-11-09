@@ -12,7 +12,7 @@ It was designed as an extension of the [VIVO](https://vivoweb.org/) ontology and
 
 | File | Content |
 |---|---|
-| [`workflow-energy-core.ttl`](workflow-energy-core.ttl) | the core: 16 classes, 140 properties (40 object, 100 data), and the annotation property `rm:unit` |
+| [`workflow-energy-core.ttl`](workflow-energy-core.ttl) | the core: 17 classes, 141 properties (41 object, 100 data), the annotation property `rm:unit`, and 5 energy method types |
 | [`research-software.ttl`](research-software.ttl) | optional: 5 classes for research software around workflows (benchmarks and datasets, data systems, workflow environments, workflow scheduling, workflow tools and plugins). Imports the core. |
 
 Namespace: `http://example.org/ontology/run-metadata#` (prefix `rm:`), the same in both files.
@@ -53,10 +53,14 @@ https://github.com/YagmurKati/fonda-vivo-run-publisher.
 
 ## Version and license
 
-Version 0.9.4 (2026-11-08). All versions: [10.5281/zenodo.24010863](https://doi.org/10.5281/zenodo.24010863). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Version 0.9.5 (2026-11-09). All versions: [10.5281/zenodo.24010863](https://doi.org/10.5281/zenodo.24010863). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ## Changes
 
+- 0.9.5 (2026-11-09): energy method types. New class `rm:EnergyMethodType` with 5 types (whole-node measurement,
+  CPU-package measurement, CPU-time share, Kepler pod attribution, scaled Kepler pod attribution) and the property
+  `rm:energyMethodType`, so that records with the same kind of energy method can be found by software.
+  The details stay in `rm:energyCalculationMethod`.
 - 0.9.4 (2026-11-08): new annotation property `rm:unit`. The 25 data properties with a unit in their name
   now also give it as a QUDT unit. No class or property changed, so existing data stays valid.
 - 0.9.3 (2026-11-08): the range of `rm:purpose` and `rm:accessStatement` is now `rdfs:Literal` (it was `xsd:string`),

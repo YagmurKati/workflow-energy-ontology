@@ -1,4 +1,4 @@
-# Workflow Energy Ontology, core, version 0.9.4 (2026-11-08).
+# Workflow Energy Ontology, core, version 0.9.5 (2026-11-09).
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -13,8 +13,8 @@
     rdfs:label "Workflow Energy Ontology (core)"@en ;
     dcterms:creator "Yagmur Kati" ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
-    owl:versionInfo "0.9.4 (2026-11-08)" ;
-    rdfs:comment "Workflows, workflow steps, workflow runs and step executions, with energy, carbon, CPU time, memory and duration, and how each value was obtained. Designed as an extension of the VIVO ontology and used in the FONDA VIVO portal. It can be used in any RDF store. 16 classes, 140 properties. Units of data properties are given as QUDT units with rm:unit."@en .
+    owl:versionInfo "0.9.5 (2026-11-09)" ;
+    rdfs:comment "Workflows, workflow steps, workflow runs and step executions, with energy, carbon, CPU time, memory and duration, and how each value was obtained. Designed as an extension of the VIVO ontology and used in the FONDA VIVO portal. It can be used in any RDF store. 17 classes, 141 properties, 5 energy method types. Units of data properties are given as QUDT units with rm:unit."@en .
 
 # ---- Annotation property
 
@@ -37,6 +37,10 @@ rm:Backend a owl:Class ;
 
 rm:ComputeCluster a owl:Class ;
     rdfs:label "Compute Cluster"@en-US .
+
+rm:EnergyMethodType a owl:Class ;
+    rdfs:label "Energy method type"@en-US ;
+    rdfs:comment "The kind of rule by which an energy value was obtained, from a fixed list (see the individuals at the end of this file). The details stay in rm:energyCalculationMethod."@en .
 
 rm:InputDataset a owl:Class ;
     rdfs:label "Input Dataset"@en-US .
@@ -106,6 +110,12 @@ rm:computeCluster a owl:ObjectProperty ;
 rm:describesSoftwareExecution a owl:ObjectProperty ;
     rdfs:label "describes software execution"@en-US ;
     rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:Workflow ) ] .
+
+rm:energyMethodType a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:label "energy method type"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range rm:EnergyMethodType ;
+    rdfs:comment "The kind of rule by which the energy value (rm:energyKWh) was obtained, so that records with the same kind of method can be found and compared."@en .
 
 rm:executionOfStage a owl:ObjectProperty ;
     rdfs:label "workflow stage"@en-US ;
@@ -836,3 +846,28 @@ rm:workflowUiLink a owl:DatatypeProperty ;
     rdfs:label "workflow UI link"@en-US ;
     rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:Workflow ) ] ;
     rdfs:range xsd:anyURI .
+
+# ---- Energy method types
+
+rm:WholeNodeMeasurement a owl:NamedIndividual , rm:EnergyMethodType ;
+    rdfs:label "Whole-node measurement"@en-US ;
+    rdfs:comment "Measured energy of the whole node (for example IPMI, or the node's ACPI power meter read by Kepler) while the run had the node to itself. Includes the node's idle power."@en .
+
+rm:CpuPackageMeasurement a owl:NamedIndividual , rm:EnergyMethodType ;
+    rdfs:label "CPU-package measurement"@en-US ;
+    rdfs:comment "Measured energy of the node's CPU packages (Intel RAPL). The rest of the node, such as memory, disks and fans, is not included."@en .
+
+rm:CpuTimeShare a owl:NamedIndividual , rm:EnergyMethodType ;
+    rdfs:label "CPU-time share"@en-US ;
+    rdfs:comment "A share of a measured energy, split by CPU time: the share of a run on a shared node, or the share of a step in its run."@en .
+
+rm:KeplerPodAttribution a owl:NamedIndividual , rm:EnergyMethodType ;
+    rdfs:label "Kepler pod attribution"@en-US ;
+    rdfs:comment "The sum of the energy that Kepler attributes to the pods of the run or step, from the measured energy of their nodes."@en .
+
+rm:ScaledKeplerPodAttribution a owl:NamedIndividual , rm:EnergyMethodType ;
+    rdfs:label "Scaled Kepler pod attribution"@en-US ;
+    rdfs:comment "Kepler pod attribution for only some of the pods, scaled up to the full CPU time of the run or step. An estimate."@en .
+
+[] a owl:AllDifferent ;
+    owl:distinctMembers ( rm:WholeNodeMeasurement rm:CpuPackageMeasurement rm:CpuTimeShare rm:KeplerPodAttribution rm:ScaledKeplerPodAttribution ) .
