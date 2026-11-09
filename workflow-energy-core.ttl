@@ -1,4 +1,4 @@
-# Workflow Energy Ontology, core, version 0.9.6 (2026-11-09).
+# Workflow Energy Ontology, core, version 0.9.7 (2026-11-09).
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -13,8 +13,8 @@
     rdfs:label "Workflow Energy Ontology (core)"@en ;
     dcterms:creator "Yagmur Kati" ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
-    owl:versionInfo "0.9.6 (2026-11-09)" ;
-    rdfs:comment "Workflows, workflow steps, workflow runs and step executions, with energy, carbon, CPU time, memory and duration, and how each value was obtained. Designed as an extension of the VIVO ontology and used in the FONDA VIVO portal. It can be used in any RDF store. 20 classes, 144 properties, 18 types of methods and sources. Units of data properties are given as QUDT units with rm:unit."@en .
+    owl:versionInfo "0.9.7 (2026-11-09)" ;
+    rdfs:comment "Workflows, workflow steps, workflow runs and step executions, with energy, carbon, CPU time, memory and duration, and how each value was obtained. Designed as an extension of the VIVO ontology and used in the FONDA VIVO portal. It can be used in any RDF store. 22 classes, 147 properties, 27 types of methods and sources. Units of data properties are given as QUDT units with rm:unit."@en .
 
 # ---- Annotation property
 
@@ -53,6 +53,14 @@ rm:EnergySourceType a owl:Class ;
 rm:EnergyMethodType a owl:Class ;
     rdfs:label "Energy method type"@en-US ;
     rdfs:comment "The kind of rule by which an energy value was obtained, from a fixed list (see the individuals at the end of this file). The details stay in rm:energyCalculationMethod."@en .
+
+rm:DurationMethodType a owl:Class ;
+    rdfs:label "Duration method type"@en-US ;
+    rdfs:comment "The kind of rule or source behind a duration, from a fixed list (see the individuals at the end of this file). The details stay in rm:durationCalculationMethod."@en .
+
+rm:CarbonMethodType a owl:Class ;
+    rdfs:label "Carbon method type"@en-US ;
+    rdfs:comment "The kind of rule by which a carbon emission was obtained, from a fixed list (see the individuals at the end of this file). The details stay in rm:carbonCalculationMethod."@en .
 
 rm:InputDataset a owl:Class ;
     rdfs:label "Input Dataset"@en-US .
@@ -146,6 +154,18 @@ rm:energyMethodType a owl:ObjectProperty , owl:FunctionalProperty ;
     rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
     rdfs:range rm:EnergyMethodType ;
     rdfs:comment "The kind of rule by which the energy value (rm:energyKWh) was obtained, so that records with the same kind of method can be found and compared."@en .
+
+rm:durationMethodType a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:label "duration method type"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range rm:DurationMethodType ;
+    rdfs:comment "The kind of duration method, from a fixed list, so that records of the same kind can be found and compared. The details stay in rm:durationCalculationMethod."@en .
+
+rm:carbonMethodType a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:label "carbon method type"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range rm:CarbonMethodType ;
+    rdfs:comment "The kind of carbon method, from a fixed list, so that records of the same kind can be found and compared. The details stay in rm:carbonCalculationMethod."@en .
 
 rm:executionOfStage a owl:ObjectProperty ;
     rdfs:label "workflow stage"@en-US ;
@@ -576,6 +596,13 @@ rm:energyMeasurementCoverage a owl:DatatypeProperty ;
     rdfs:domain rm:RunMetadata ;
     rdfs:range xsd:string .
 
+rm:energyMeasurementCoveragePercent a owl:DatatypeProperty ;
+    rdfs:label "energy measurement coverage (%)"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:decimal ;
+    rm:unit unit:PERCENT ;
+    rdfs:comment "The share of the node's energy assigned to the run, in percent: 100 when the run had the node to itself and its energy was measured, less when it shared the node and its energy is an estimate. The text in rm:energyMeasurementCoverage says how."@en .
+
 rm:energyMetricSource a owl:DatatypeProperty ;
     rdfs:label "energy metric source"@en-US ;
     rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
@@ -964,3 +991,49 @@ rm:IntelRapl a owl:NamedIndividual , rm:EnergySourceType ;
 
 [] a owl:AllDifferent ;
     owl:distinctMembers ( rm:IpmiNodePower rm:AcpiMeterViaKepler rm:KeplerPodCounter rm:SlurmEnergyAccounting rm:IntelRapl ) .
+
+# ---- Duration method types
+
+rm:SlurmElapsedTime a owl:NamedIndividual , rm:DurationMethodType ;
+    rdfs:label "Slurm elapsed time"@en-US ;
+    rdfs:comment "Slurm ElapsedRaw of the job, from its start to its end."@en .
+
+rm:NextflowLogSpan a owl:NamedIndividual , rm:DurationMethodType ;
+    rdfs:label "Nextflow log span"@en-US ;
+    rdfs:comment "Wall-clock time from the first to the last timestamp in the Nextflow debug log, with the trace timestamps if the log has none."@en .
+
+rm:NextflowTaskSpan a owl:NamedIndividual , rm:DurationMethodType ;
+    rdfs:label "Nextflow task span"@en-US ;
+    rdfs:comment "Wall-clock time from the earliest task submission or start to the latest task end, from the Nextflow trace. For tasks reused from the cache, the window of their original execution."@en .
+
+rm:CommandWallClock a owl:NamedIndividual , rm:DurationMethodType ;
+    rdfs:label "Command wall-clock time"@en-US ;
+    rdfs:comment "Wall-clock time measured around a command, such as the Nextflow run command or a stage's command. Includes start-up and orchestration."@en .
+
+rm:KubernetesPodSpan a owl:NamedIndividual , rm:DurationMethodType ;
+    rdfs:label "Kubernetes pod span"@en-US ;
+    rdfs:comment "Wall-clock time from the first container start to the last container end of the Kubernetes pods or Job, from the Kubernetes API."@en .
+
+rm:SparkEventLogSpan a owl:NamedIndividual , rm:DurationMethodType ;
+    rdfs:label "Spark event log span"@en-US ;
+    rdfs:comment "Wall-clock time between the application start and end events in the Spark event log."@en .
+
+[] a owl:AllDifferent ;
+    owl:distinctMembers ( rm:SlurmElapsedTime rm:NextflowLogSpan rm:NextflowTaskSpan rm:CommandWallClock rm:KubernetesPodSpan rm:SparkEventLogSpan ) .
+
+# ---- Carbon method types
+
+rm:TimeMatchedCarbon a owl:NamedIndividual , rm:CarbonMethodType ;
+    rdfs:label "Time-matched carbon"@en-US ;
+    rdfs:comment "The energy times the carbon intensity of the grid in the hours or quarter-hours the run used, weighted by the run's energy in each of them."@en .
+
+rm:StepShareOfRunCarbon a owl:NamedIndividual , rm:CarbonMethodType ;
+    rdfs:label "Share of the run's carbon"@en-US ;
+    rdfs:comment "The run's carbon emission split among its steps, for example by each step's share of the CPU time."@en .
+
+rm:StepEnergyTimesRunIntensity a owl:NamedIndividual , rm:CarbonMethodType ;
+    rdfs:label "Step energy times run intensity"@en-US ;
+    rdfs:comment "The step's energy times the carbon intensity of its run."@en .
+
+[] a owl:AllDifferent ;
+    owl:distinctMembers ( rm:TimeMatchedCarbon rm:StepShareOfRunCarbon rm:StepEnergyTimesRunIntensity ) .
