@@ -1,4 +1,4 @@
-# Workflow Energy Ontology, core, version 0.9.5 (2026-11-09).
+# Workflow Energy Ontology, core, version 0.9.6 (2026-11-09).
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -13,8 +13,8 @@
     rdfs:label "Workflow Energy Ontology (core)"@en ;
     dcterms:creator "Yagmur Kati" ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
-    owl:versionInfo "0.9.5 (2026-11-09)" ;
-    rdfs:comment "Workflows, workflow steps, workflow runs and step executions, with energy, carbon, CPU time, memory and duration, and how each value was obtained. Designed as an extension of the VIVO ontology and used in the FONDA VIVO portal. It can be used in any RDF store. 17 classes, 141 properties, 5 energy method types. Units of data properties are given as QUDT units with rm:unit."@en .
+    owl:versionInfo "0.9.6 (2026-11-09)" ;
+    rdfs:comment "Workflows, workflow steps, workflow runs and step executions, with energy, carbon, CPU time, memory and duration, and how each value was obtained. Designed as an extension of the VIVO ontology and used in the FONDA VIVO portal. It can be used in any RDF store. 20 classes, 144 properties, 18 types of methods and sources. Units of data properties are given as QUDT units with rm:unit."@en .
 
 # ---- Annotation property
 
@@ -37,6 +37,18 @@ rm:Backend a owl:Class ;
 
 rm:ComputeCluster a owl:Class ;
     rdfs:label "Compute Cluster"@en-US .
+
+rm:CpuTimeMethodType a owl:Class ;
+    rdfs:label "CPU-time method type"@en-US ;
+    rdfs:comment "The kind of rule or source behind a value, from a fixed list (see the individuals at the end of this file). The details stay in rm:cpuTimeCalculationMethod."@en .
+
+rm:MemoryMethodType a owl:Class ;
+    rdfs:label "Memory method type"@en-US ;
+    rdfs:comment "The kind of rule or source behind a value, from a fixed list (see the individuals at the end of this file). The details stay in rm:memoryCalculationMethod."@en .
+
+rm:EnergySourceType a owl:Class ;
+    rdfs:label "Energy source type"@en-US ;
+    rdfs:comment "The kind of rule or source behind a value, from a fixed list (see the individuals at the end of this file). The details stay in rm:energyMetricSource."@en .
 
 rm:EnergyMethodType a owl:Class ;
     rdfs:label "Energy method type"@en-US ;
@@ -110,6 +122,24 @@ rm:computeCluster a owl:ObjectProperty ;
 rm:describesSoftwareExecution a owl:ObjectProperty ;
     rdfs:label "describes software execution"@en-US ;
     rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:Workflow ) ] .
+
+rm:cpuTimeMethodType a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:label "CPU-time method type"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range rm:CpuTimeMethodType ;
+    rdfs:comment "The kind of CPU-time method, from a fixed list, so that records of the same kind can be found and compared. The details stay in rm:cpuTimeCalculationMethod."@en .
+
+rm:memoryMethodType a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:label "memory method type"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range rm:MemoryMethodType ;
+    rdfs:comment "The kind of memory method, from a fixed list, so that records of the same kind can be found and compared. The details stay in rm:memoryCalculationMethod."@en .
+
+rm:energySourceType a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:label "energy source type"@en-US ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( rm:RunMetadata rm:WorkflowProcessRun ) ] ;
+    rdfs:range rm:EnergySourceType ;
+    rdfs:comment "The kind of energy source, from a fixed list, so that records of the same kind can be found and compared. The details stay in rm:energyMetricSource."@en .
 
 rm:energyMethodType a owl:ObjectProperty , owl:FunctionalProperty ;
     rdfs:label "energy method type"@en-US ;
@@ -871,3 +901,66 @@ rm:ScaledKeplerPodAttribution a owl:NamedIndividual , rm:EnergyMethodType ;
 
 [] a owl:AllDifferent ;
     owl:distinctMembers ( rm:WholeNodeMeasurement rm:CpuPackageMeasurement rm:CpuTimeShare rm:KeplerPodAttribution rm:ScaledKeplerPodAttribution ) .
+
+# ---- CPU-time method, memory method and energy source types
+
+rm:NextflowTraceCpuTime a owl:NamedIndividual , rm:CpuTimeMethodType ;
+    rdfs:label "Nextflow trace CPU time"@en-US ;
+    rdfs:comment "Sum over the tasks of realtime x %cpu from the Nextflow trace. Covers only the tasks, not the Nextflow process itself or container starts."@en .
+
+rm:SlurmJobCpuTime a owl:NamedIndividual , rm:CpuTimeMethodType ;
+    rdfs:label "Slurm job CPU time"@en-US ;
+    rdfs:comment "Slurm TotalCPU of the job: user and system CPU time of all job steps, including the workflow engine itself."@en .
+
+rm:PrometheusContainerCpuTime a owl:NamedIndividual , rm:CpuTimeMethodType ;
+    rdfs:label "Prometheus container CPU time"@en-US ;
+    rdfs:comment "Sum of the increases of container_cpu_usage_seconds_total of the pods, read from Prometheus."@en .
+
+rm:ProcessAccountingCpuTime a owl:NamedIndividual , rm:CpuTimeMethodType ;
+    rdfs:label "Process accounting CPU time"@en-US ;
+    rdfs:comment "User and system CPU time of a command and its child processes, from the operating system (getrusage)."@en .
+
+[] a owl:AllDifferent ;
+    owl:distinctMembers ( rm:NextflowTraceCpuTime rm:SlurmJobCpuTime rm:PrometheusContainerCpuTime rm:ProcessAccountingCpuTime ) .
+
+rm:NextflowPeakRss a owl:NamedIndividual , rm:MemoryMethodType ;
+    rdfs:label "Nextflow peak RSS"@en-US ;
+    rdfs:comment "Peak resident memory (peak_rss) of the tasks, from the Nextflow trace."@en .
+
+rm:SlurmMaxRss a owl:NamedIndividual , rm:MemoryMethodType ;
+    rdfs:label "Slurm MaxRSS"@en-US ;
+    rdfs:comment "Largest resident memory of any job step, from Slurm accounting (MaxRSS)."@en .
+
+rm:PrometheusWorkingSet a owl:NamedIndividual , rm:MemoryMethodType ;
+    rdfs:label "Prometheus working set"@en-US ;
+    rdfs:comment "Working-set memory of the pods (container_memory_working_set_bytes), read from Prometheus and summed across concurrent pods."@en .
+
+rm:ProcessAccountingMemory a owl:NamedIndividual , rm:MemoryMethodType ;
+    rdfs:label "Process accounting memory"@en-US ;
+    rdfs:comment "Largest resident memory of a single process, from the operating system (getrusage)."@en .
+
+[] a owl:AllDifferent ;
+    owl:distinctMembers ( rm:NextflowPeakRss rm:SlurmMaxRss rm:PrometheusWorkingSet rm:ProcessAccountingMemory ) .
+
+rm:IpmiNodePower a owl:NamedIndividual , rm:EnergySourceType ;
+    rdfs:label "IPMI node power"@en-US ;
+    rdfs:comment "Power of the whole node from its baseboard management controller (IPMI), read through the Prometheus ipmi_exporter."@en .
+
+rm:AcpiMeterViaKepler a owl:NamedIndividual , rm:EnergySourceType ;
+    rdfs:label "ACPI power meter via Kepler"@en-US ;
+    rdfs:comment "Energy of the whole node from its ACPI power meter, read by Kepler (kepler_node_platform_joules_total)."@en .
+
+rm:KeplerPodCounter a owl:NamedIndividual , rm:EnergySourceType ;
+    rdfs:label "Kepler pod counters"@en-US ;
+    rdfs:comment "Energy that Kepler attributes to each pod from the measurements of its node (kepler_container_joules_total)."@en .
+
+rm:SlurmEnergyAccounting a owl:NamedIndividual , rm:EnergySourceType ;
+    rdfs:label "Slurm energy accounting"@en-US ;
+    rdfs:comment "Energy of the node from Slurm accounting (acct_gather_energy/ipmi, ConsumedEnergyRaw)."@en .
+
+rm:IntelRapl a owl:NamedIndividual , rm:EnergySourceType ;
+    rdfs:label "Intel RAPL"@en-US ;
+    rdfs:comment "Energy counters of the processor packages (and memory) from Intel RAPL (powercap)."@en .
+
+[] a owl:AllDifferent ;
+    owl:distinctMembers ( rm:IpmiNodePower rm:AcpiMeterViaKepler rm:KeplerPodCounter rm:SlurmEnergyAccounting rm:IntelRapl ) .
