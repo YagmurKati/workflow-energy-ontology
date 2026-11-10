@@ -1,4 +1,4 @@
-# Workflow Energy Ontology, core, version 0.9.7 (2026-11-09).
+# Workflow Energy Ontology, core, version 0.9.8 (2026-11-10).
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -13,8 +13,8 @@
     rdfs:label "Workflow Energy Ontology (core)"@en ;
     dcterms:creator "Yagmur Kati" ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
-    owl:versionInfo "0.9.7 (2026-11-09)" ;
-    rdfs:comment "Workflows, workflow steps, workflow runs and step executions, with energy, carbon, CPU time, memory and duration, and how each value was obtained. Designed as an extension of the VIVO ontology and used in the FONDA VIVO portal. It can be used in any RDF store. 22 classes, 147 properties, 27 types of methods and sources. Units of data properties are given as QUDT units with rm:unit."@en .
+    owl:versionInfo "0.9.8 (2026-11-10)" ;
+    rdfs:comment "Workflows, workflow steps, workflow runs and step executions, with energy, carbon, CPU time, memory and duration, and how each value was obtained. Designed as an extension of the VIVO ontology and used in the FONDA VIVO portal. It can be used in any RDF store. 22 classes, 148 properties, 27 types of methods and sources. Units of data properties are given as QUDT units with rm:unit."@en .
 
 # ---- Annotation property
 
@@ -726,7 +726,16 @@ rm:nextflowSessionId a owl:DatatypeProperty ;
 rm:nextflowVersion a owl:DatatypeProperty ;
     rdfs:label "Nextflow version"@en-US ;
     rdfs:domain rm:RunMetadata ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    rdfs:subPropertyOf rm:workflowEngineVersion ;
+    owl:deprecated true ;
+    rdfs:comment "Deprecated since 0.9.8: use rm:workflowEngineVersion, which holds the version of any workflow engine."@en .
+
+rm:workflowEngineVersion a owl:DatatypeProperty ;
+    rdfs:label "workflow engine version"@en-US ;
+    rdfs:domain rm:RunMetadata ;
+    rdfs:range xsd:string ;
+    rdfs:comment "The version of the workflow engine that executed the run, for example of Nextflow, Snakemake or Airflow. The engine itself is given by rm:workflowEngine of the run's workflow."@en .
 
 rm:nodeConditionsMethod a owl:DatatypeProperty ;
     rdfs:label "node conditions method"@en-US ;

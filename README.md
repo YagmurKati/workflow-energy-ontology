@@ -12,7 +12,7 @@ It was designed as an extension of the [VIVO](https://vivoweb.org/) ontology and
 
 | File | Content |
 |---|---|
-| [`workflow-energy-core.ttl`](workflow-energy-core.ttl) | the core: 22 classes, 147 properties (46 object, 101 data), the annotation property `rm:unit`, and 27 types of methods and sources |
+| [`workflow-energy-core.ttl`](workflow-energy-core.ttl) | the core: 22 classes, 148 properties (46 object, 102 data), the annotation property `rm:unit`, and 27 types of methods and sources |
 | [`research-software.ttl`](research-software.ttl) | optional: 5 classes for research software around workflows (benchmarks and datasets, data systems, workflow environments, workflow scheduling, workflow tools and plugins). Imports the core. |
 
 Namespace: `http://example.org/ontology/run-metadata#` (prefix `rm:`), the same in both files.
@@ -53,10 +53,12 @@ https://github.com/YagmurKati/fonda-vivo-run-publisher.
 
 ## Version and license
 
-Version 0.9.7 (2026-11-09). All versions: [10.5281/zenodo.24010863](https://doi.org/10.5281/zenodo.24010863). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Version 0.9.8 (2026-11-10). All versions: [10.5281/zenodo.24010863](https://doi.org/10.5281/zenodo.24010863). Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ## Changes
 
+- 0.9.8 (2026-11-10): new property `rm:workflowEngineVersion` for the version of any workflow engine.
+  `rm:nextflowVersion` is deprecated and now a subproperty of it.
 - 0.9.7 (2026-11-09): types for the duration method (`rm:durationMethodType`, 6 types) and the carbon method
   (`rm:carbonMethodType`, 3 types), like the other method types. New property `rm:energyMeasurementCoveragePercent`:
   the share of the node's energy assigned to a run, as a number in percent (`unit:PERCENT`), next to the text in
